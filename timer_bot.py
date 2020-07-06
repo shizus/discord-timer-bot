@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import os
+import random
 
 from discord_timer import DiscordTimer
 import discord
@@ -8,6 +9,40 @@ import discord
 client = discord.Client()
 
 TOKEN = os.getenv('DISCORD_TOKEN', '')
+
+tagged_answers = [
+    "mande",
+    "diga",
+    "Si?",
+    "Que necesita?",
+    "aca estoy",
+]
+
+eightball_answers = [
+         "Si!",
+         "No",
+         "No!",
+         "Es cierto",
+         "Es decididamente así",
+         "Sin duda",
+         "Sí definitivamente",
+         "Puedes confiar en ello",
+         "Como yo lo veo, sí",
+         "Más probable",
+         "Perspectivas buena",
+         "Si",
+         "Las señales apuntan a que sí",
+         "Respuesta confusa, intenta otra vez",
+         "Pregunta de nuevo más tarde",
+         "Mejor no decirte ahora",
+         "No se puede predecir ahora",
+         "Concéntrate y pregunta otra vez",
+         "No cuentes con eso",
+         "Mi respuesta es no",
+         "Mis fuentes dicen que no",
+         "Perspectivas no tan buenas",
+         "Muy dudoso",
+]
 
 
 def manage_play_error(error):
@@ -119,6 +154,14 @@ async def on_message(message):
         channel_name = "Oficina"
         channel = get_channel_by_name(message.guild, channel_name, "voice")
         await play_sound(channel)
+
+    if client.user.name in message.clean_content and '?' not in message.content:
+        answer = tagged_answers[random.randint(1, len(tagged_answers))-1]
+        await message.channel.send(answer)
+
+    if client.user.name in message.clean_content and '?' in message.content:
+        answer = eightball_answers[random.randint(0, len(eightball_answers))-1]
+        await message.channel.send(answer)
 
 
 client.run(TOKEN)
